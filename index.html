@@ -1,0 +1,2125 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Козацькі Хроніки - Генератор Військового Товариша</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=UnifrakturCook:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --parchment: #f4e9d8;
+            --old-paper: #e2d5c0;
+            --ink-dark: #2c1810;
+            --ink-light: #5d4037;
+            --stain-brown: #8b4513;
+            --stain-yellow: #d4a76a;
+            --stain-tea: #b08d57;
+            --cossack-blue: #0057b7;
+            --cossack-yellow: #ffd700;
+            --blood-red: #8b0000;
+            --gold: #daa520;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background-color: #2a1c13;
+            color: var(--ink-dark);
+            padding: 20px;
+            min-height: 100vh;
+            font-family: 'Cinzel', serif;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(139, 69, 19, 0.15) 1px, transparent 1px),
+                radial-gradient(circle at 90% 80%, rgba(139, 69, 19, 0.1) 1px, transparent 1px);
+            background-size: 40px 40px, 60px 60px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        /* Стилізація скроллбара */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--old-paper);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--stain-brown);
+            border-radius: 4px;
+        }
+        
+        /* Заголовок у стилі старої козацької хроніки */
+        .chronicle-title {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 30px;
+            background-color: var(--parchment);
+            border: 3px double var(--stain-brown);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+            position: relative;
+            overflow: hidden;
+            border-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cpath d='M0,0 L100,0 L100,100 L0,100 Z' fill='none' stroke='%238b4513' stroke-width='3' stroke-dasharray='10,5'/%3E%3C/svg%3E") 30 round;
+        }
+        
+        .chronicle-title::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(90deg, transparent 95%, rgba(139, 69, 19, 0.1) 100%),
+                linear-gradient(0deg, rgba(0, 87, 183, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 215, 0, 0.05) 1px, transparent 1px);
+            background-size: 100% 100%, 20px 100%, 100% 20px;
+            pointer-events: none;
+        }
+        
+        .title-main {
+            font-family: 'UnifrakturCook', cursive;
+            font-size: 4rem;
+            color: var(--ink-dark);
+            letter-spacing: 3px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 1;
+            margin-bottom: 10px;
+            line-height: 1.1;
+        }
+        
+        .title-main::first-letter {
+            font-size: 5.5rem;
+            color: var(--blood-red);
+            text-shadow: 3px 3px 0 var(--stain-brown);
+        }
+        
+        .title-sub {
+            font-size: 1.8rem;
+            color: var(--ink-light);
+            font-style: italic;
+            margin-top: 10px;
+            position: relative;
+            z-index: 1;
+            letter-spacing: 1px;
+        }
+        
+        .cossack-trident {
+            font-size: 3rem;
+            color: var(--cossack-blue);
+            margin: 0 15px;
+            text-shadow: 1px 1px 0 var(--cossack-yellow);
+        }
+        
+        .paper-stain {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.08;
+            z-index: 0;
+            filter: blur(2px);
+        }
+        
+        .stain-1 {
+            width: 200px;
+            height: 200px;
+            background-color: var(--stain-tea);
+            top: -80px;
+            right: -50px;
+            transform: rotate(15deg);
+        }
+        
+        .stain-2 {
+            width: 150px;
+            height: 150px;
+            background-color: var(--stain-brown);
+            bottom: -50px;
+            left: 10%;
+            transform: rotate(-10deg);
+        }
+        
+        .stain-3 {
+            width: 120px;
+            height: 120px;
+            background-color: var(--stain-yellow);
+            top: 30%;
+            left: -40px;
+        }
+        
+        .character-sheet {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .sheet-section {
+            background-color: var(--parchment);
+            padding: 25px;
+            border: 2px solid var(--stain-brown);
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.4);
+            position: relative;
+            overflow: hidden;
+            min-height: 300px;
+            border-radius: 2px;
+        }
+        
+        .sheet-section::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--cossack-blue), var(--cossack-yellow), var(--cossack-blue));
+        }
+        
+        .section-title {
+            font-size: 1.8rem;
+            border-bottom: 2px solid var(--stain-brown);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            color: var(--ink-dark);
+            letter-spacing: 1px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 700;
+            text-transform: uppercase;
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: "";
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 60px;
+            height: 2px;
+            background-color: var(--cossack-blue);
+        }
+        
+        .section-title i {
+            color: var(--blood-red);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: var(--ink-light);
+            font-size: 1.1rem;
+            font-family: 'Cinzel', serif;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--old-paper);
+            border: 1px solid var(--stain-brown);
+            color: var(--ink-dark);
+            font-size: 1rem;
+            border-radius: 3px;
+            font-family: 'Cinzel', serif;
+            transition: all 0.3s;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--cossack-blue);
+            box-shadow: 0 0 0 2px rgba(0, 87, 183, 0.2);
+        }
+        
+        input:read-only, input.locked {
+            background-color: #f0e6d5;
+            color: var(--ink-light);
+            cursor: not-allowed;
+            border-color: #a0522d;
+            font-style: italic;
+        }
+        
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+            line-height: 1.5;
+        }
+        
+        /* Характеристики козака */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        .stat-box {
+            background-color: var(--old-paper);
+            border: 2px solid var(--stain-brown);
+            padding: 15px;
+            text-align: center;
+            border-radius: 5px;
+            position: relative;
+            transition: all 0.3s;
+        }
+        
+        .stat-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-color: var(--cossack-blue);
+        }
+        
+        .stat-name {
+            font-size: 1rem;
+            font-weight: bold;
+            color: var(--blood-red);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+        
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--ink-dark);
+            margin: 10px 0;
+            font-family: 'Cinzel', serif;
+        }
+        
+        .stat-modifier {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: var(--blood-red);
+            color: var(--parchment);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        
+        .roll-btn {
+            background: linear-gradient(to bottom, var(--stain-brown), #5d2906);
+            color: var(--parchment);
+            border: none;
+            padding: 8px 15px;
+            cursor: pointer;
+            border-radius: 3px;
+            font-size: 0.9rem;
+            margin-top: 5px;
+            transition: all 0.3s;
+            font-family: 'Cinzel', serif;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: 1px solid #5d2906;
+        }
+        
+        .roll-btn:hover {
+            background: linear-gradient(to bottom, #a0522d, var(--stain-brown));
+            transform: translateY(-2px);
+            box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* HP та рівень */
+        .hp-display {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: linear-gradient(to right, var(--old-paper), #e8dfca);
+            padding: 15px;
+            border: 2px solid var(--stain-brown);
+            border-radius: 5px;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hp-display::before {
+            content: "⚔";
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            font-size: 1.5rem;
+            color: rgba(139, 0, 0, 0.1);
+        }
+        
+        .hp-display::after {
+            content: "🛡";
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            font-size: 1.5rem;
+            color: rgba(139, 0, 0, 0.1);
+        }
+        
+        .hp-info {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .hp-label {
+            font-size: 0.9rem;
+            color: var(--ink-light);
+            margin-bottom: 5px;
+        }
+        
+        .hp-value {
+            font-size: 2.8rem;
+            font-weight: bold;
+            color: var(--blood-red);
+            line-height: 1;
+        }
+        
+        .hp-max {
+            font-size: 1rem;
+            color: var(--ink-light);
+            margin-top: 5px;
+        }
+        
+        .level-badge {
+            background: linear-gradient(135deg, var(--cossack-blue), #003d82);
+            color: var(--cossack-yellow);
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: 2px solid var(--cossack-yellow);
+            box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Панель управління HP */
+        .hp-controls {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .hp-btn {
+            background-color: var(--old-paper);
+            border: 1px solid var(--stain-brown);
+            padding: 8px;
+            cursor: pointer;
+            border-radius: 3px;
+            text-align: center;
+            transition: all 0.3s;
+            font-family: 'Cinzel', serif;
+            font-weight: bold;
+        }
+        
+        .hp-btn:hover {
+            background-color: var(--stain-yellow);
+            transform: translateY(-2px);
+        }
+        
+        .hp-btn:nth-child(1), .hp-btn:nth-child(2) {
+            color: var(--blood-red);
+        }
+        
+        .hp-btn:nth-child(3), .hp-btn:nth-child(4) {
+            color: #2e7d32;
+        }
+        
+        .hp-btn:nth-child(5) {
+            background: linear-gradient(to right, #2e7d32, #4caf50);
+            color: white;
+            border-color: #2e7d32;
+        }
+        
+        /* Система слави (XP) */
+        .fame-container {
+            margin-top: 20px;
+        }
+        
+        .fame-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        
+        .fame-bar {
+            height: 25px;
+            background-color: var(--old-paper);
+            border: 1px solid var(--stain-brown);
+            border-radius: 3px;
+            overflow: hidden;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .fame-bar::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent 49%, rgba(0, 87, 183, 0.1) 50%, transparent 51%);
+            background-size: 20px 100%;
+        }
+        
+        .fame-progress {
+            height: 100%;
+            background: linear-gradient(to right, var(--cossack-blue), #0077cc);
+            width: 0%;
+            transition: width 1s ease-in-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--cossack-yellow);
+            font-weight: bold;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .fame-add-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .fame-add-btn {
+            background-color: var(--old-paper);
+            border: 1px solid var(--stain-brown);
+            padding: 8px;
+            cursor: pointer;
+            border-radius: 3px;
+            text-align: center;
+            transition: all 0.3s;
+            font-family: 'Cinzel', serif;
+        }
+        
+        .fame-add-btn:hover {
+            background-color: var(--stain-yellow);
+            transform: translateY(-2px);
+        }
+        
+        /* Генератор кубиків (кости) */
+        .dice-roller {
+            background-color: var(--parchment);
+            padding: 25px;
+            border: 2px solid var(--stain-brown);
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.4);
+            margin-top: 30px;
+            border-radius: 2px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .dice-roller::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--cossack-yellow), var(--cossack-blue), var(--cossack-yellow));
+        }
+        
+        .dice-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+        
+        .dice-select {
+            flex: 1;
+            min-width: 150px;
+        }
+        
+        .roll-dice-btn {
+            background: linear-gradient(to bottom, var(--cossack-blue), #003d82);
+            color: var(--cossack-yellow);
+            border: 2px solid var(--cossack-yellow);
+            padding: 12px 25px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: 'Cinzel', serif;
+            font-weight: bold;
+        }
+        
+        .roll-dice-btn:hover {
+            background: linear-gradient(to bottom, #0066cc, var(--cossack-blue));
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 87, 183, 0.4);
+        }
+        
+        .dice-result {
+            font-size: 2.2rem;
+            text-align: center;
+            margin: 20px 0;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Cinzel', serif;
+            font-weight: bold;
+            color: var(--blood-red);
+            background-color: var(--old-paper);
+            border: 2px dashed var(--stain-brown);
+            border-radius: 5px;
+            padding: 15px;
+        }
+        
+        .dice-animation {
+            font-size: 3rem;
+            animation: diceRoll 1s infinite;
+            color: var(--cossack-blue);
+        }
+        
+        @keyframes diceRoll {
+            0% { transform: rotate(0deg) scale(1); }
+            25% { transform: rotate(90deg) scale(1.1); }
+            50% { transform: rotate(180deg) scale(1); }
+            75% { transform: rotate(270deg) scale(1.1); }
+            100% { transform: rotate(360deg) scale(1); }
+        }
+        
+        /* Швидкі кнопки кидків */
+        .quick-dice-buttons {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .quick-dice-btn {
+            background-color: var(--old-paper);
+            border: 1px solid var(--stain-brown);
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 3px;
+            text-align: center;
+            transition: all 0.3s;
+            font-family: 'Cinzel', serif;
+            font-weight: bold;
+        }
+        
+        .quick-dice-btn:hover {
+            background-color: var(--stain-yellow);
+            transform: translateY(-2px);
+        }
+        
+        /* Історія кидків */
+        .dice-history {
+            margin-top: 20px;
+            max-height: 150px;
+            overflow-y: auto;
+            padding: 10px;
+            background-color: var(--old-paper);
+            border: 1px solid var(--stain-brown);
+            border-radius: 3px;
+        }
+        
+        .dice-history-item {
+            padding: 8px;
+            border-bottom: 1px dashed var(--stain-brown);
+            font-family: 'Cinzel', serif;
+        }
+        
+        .dice-history-item:last-child {
+            border-bottom: none;
+        }
+        
+        /* Лог битв */
+        .battle-log {
+            margin-top: 20px;
+            max-height: 150px;
+            overflow-y: auto;
+            padding: 10px;
+            background-color: var(--old-paper);
+            border: 1px solid var(--stain-brown);
+            border-radius: 3px;
+        }
+        
+        .battle-log-item {
+            padding: 8px;
+            border-bottom: 1px dashed var(--stain-brown);
+            display: flex;
+            justify-content: space-between;
+            font-family: 'Cinzel', serif;
+        }
+        
+        .battle-log-item:last-child {
+            border-bottom: none;
+        }
+        
+        .battle-damage {
+            color: var(--blood-red);
+            font-weight: bold;
+        }
+        
+        .battle-heal {
+            color: #2e7d32;
+            font-weight: bold;
+        }
+        
+        /* Кнопки дій */
+        .action-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        
+        .action-btn {
+            padding: 14px 28px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Cinzel', serif;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .save-btn {
+            background: linear-gradient(to bottom, #2e7d32, #1b5e20);
+            color: white;
+            border: 2px solid #4caf50;
+        }
+        
+        .load-btn {
+            background: linear-gradient(to bottom, #1565c0, #0d47a1);
+            color: white;
+            border: 2px solid #42a5f5;
+        }
+        
+        .share-btn {
+            background: linear-gradient(to bottom, #ff8f00, #ef6c00);
+            color: white;
+            border: 2px solid #ffb74d;
+        }
+        
+        .generate-btn {
+            background: linear-gradient(to bottom, #5d4037, #3e2723);
+            color: white;
+            border: 2px solid #8d6e63;
+        }
+        
+        .reset-btn {
+            background: linear-gradient(to bottom, #c62828, #b71c1c);
+            color: white;
+            border: 2px solid #ef5350;
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 15px rgba(0, 0, 0, 0.2);
+            filter: brightness(1.1);
+        }
+        
+        /* Модальні вікна */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background-color: var(--parchment);
+            padding: 30px;
+            border-radius: 5px;
+            width: 90%;
+            max-width: 500px;
+            border: 3px double var(--stain-brown);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7);
+            position: relative;
+            font-family: 'Cinzel', serif;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: var(--blood-red);
+            transition: all 0.3s;
+        }
+        
+        .close-modal:hover {
+            transform: rotate(90deg);
+        }
+        
+        /* Козацька печатка */
+        .cossack-seal {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--cossack-yellow), #daa520);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--cossack-blue);
+            font-size: 2.2rem;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+            opacity: 0.8;
+            border: 3px solid var(--cossack-blue);
+        }
+        
+        .locked-seal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            color: var(--blood-red);
+            font-size: 1.8rem;
+        }
+        
+        /* Тостові повідомлення */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(to right, var(--cossack-blue), #003d82);
+            color: var(--cossack-yellow);
+            padding: 15px 25px;
+            border-radius: 5px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            z-index: 1001;
+            display: none;
+            animation: fadeIn 0.5s, fadeOut 0.5s 2.5s;
+            font-family: 'Cinzel', serif;
+            font-weight: bold;
+            border: 2px solid var(--cossack-yellow);
+            max-width: 400px;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes fadeOut {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(20px); }
+        }
+        
+        /* Адаптивність */
+        @media (max-width: 992px) {
+            .title-main {
+                font-size: 3rem;
+            }
+            
+            .title-main::first-letter {
+                font-size: 4rem;
+            }
+            
+            .character-sheet {
+                grid-template-columns: 1fr;
+            }
+            
+            .quick-dice-buttons {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .hp-controls, .fame-add-buttons {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .title-main {
+                font-size: 2.5rem;
+            }
+            
+            .title-sub {
+                font-size: 1.4rem;
+            }
+            
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .dice-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .cossack-seal {
+                width: 50px;
+                height: 50px;
+                font-size: 1.5rem;
+            }
+            
+            .hp-controls, .fame-add-buttons {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .title-main {
+                font-size: 2rem;
+            }
+            
+            .title-sub {
+                font-size: 1.2rem;
+            }
+            
+            .section-title {
+                font-size: 1.5rem;
+            }
+            
+            .action-btn {
+                padding: 12px 20px;
+                font-size: 1rem;
+            }
+            
+            .hp-controls, .fame-add-buttons {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Заголовок у стилі козацької хроніки -->
+        <div class="chronicle-title">
+            <div class="paper-stain stain-1"></div>
+            <div class="paper-stain stain-2"></div>
+            <div class="paper-stain stain-3"></div>
+            
+            <h1 class="title-main">
+                <span>Козацькі</span>
+                <span class="cossack-trident">⚔</span>
+                <span>Хроніки</span>
+            </h1>
+            <h2 class="title-sub">Реєстр Військового Товариша Запорозького</h2>
+        </div>
+        
+        <!-- Форма реєстрації козака -->
+        <div class="character-sheet">
+            <!-- Особиста інформація козака -->
+            <div class="sheet-section">
+                <div class="locked-seal" id="name-lock" style="display: none;">
+                    <i class="fas fa-lock"></i>
+                </div>
+                <div class="cossack-seal" id="character-final-seal" style="display: none;">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                
+                <div class="section-title">
+                    <span>Реєстрація Товариша</span>
+                    <i class="fas fa-scroll"></i>
+                </div>
+                <div class="form-group">
+                    <label for="character-name">Ім'я та Прізвище *</label>
+                    <input type="text" id="character-name" placeholder="Введіть ім'я та прізвище козака" class="name-input">
+                    <small style="color: var(--ink-light); font-size: 0.9rem; display: block; margin-top: 5px;">
+                        <i class="fas fa-exclamation-circle"></i> Після внесення до реєстру ім'я неможливо змінити
+                    </small>
+                </div>
+                <div class="form-group">
+                    <label for="character-class">Звання та Посада</label>
+                    <select id="character-class">
+                        <option value="">Виберіть звання</option>
+                        <option value="Козак">Козак</option>
+                        <option value="Отаман">Отаман</option>
+                        <option value="Сотник">Сотник</option>
+                        <option value="Полковник">Полковник</option>
+                        <option value="Гетьман">Гетьман</option>
+                        <option value="Писар">Писар</option>
+                        <option value="Осавул">Осавул</option>
+                        <option value="Хорунжий">Хорунжий</option>
+                        <option value="Знатний Військовий Товариш">Знатний Військовий Товариш</option>
+                        <option value="Джура">Джура (молодий козак)</option>
+                        <option value="Курінний">Курінний</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="character-race">Походження</label>
+                    <select id="character-race">
+                        <option value="">Виберіть походження</option>
+                        <option value="Українець">Українець</option>
+                        <option value="Поляк">Поляк</option>
+                        <option value="Молдаванин">Молдаванин</option>
+                        <option value="Татарин">Татарин</option>
+                        <option value="Турок">Турок</option>
+                        <option value="Вірменин">Вірменин</option>
+                        <option value="Єврей">Єврей</option>
+                        <option value="Грек">Грек</option>
+                        <option value="Серб">Серб</option>
+                        <option value="Німець">Німець</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="character-background">Життєпис та Подвиги</label>
+                    <textarea id="character-background" placeholder="Опишіть походження, подвиги та життєвий шлях козака..."></textarea>
+                </div>
+            </div>
+            
+            <!-- Характеристики та здоров'я -->
+            <div class="sheet-section">
+                <div class="section-title">
+                    <span>Військові Якості</span>
+                    <i class="fas fa-fist-raised"></i>
+                </div>
+                
+                <div class="hp-display">
+                    <div class="hp-info">
+                        <div class="hp-label">Життєва Сила</div>
+                        <div class="hp-value" id="hp-value">45</div>
+                        <div class="hp-max">З <span id="max-hp-value">45</span> можливих</div>
+                    </div>
+                    <div class="level-badge" id="level-badge">Досвід: Новак</div>
+                </div>
+                
+                <div class="hp-controls">
+                    <div class="hp-btn" onclick="changeHP(-1)">Поранення -1</div>
+                    <div class="hp-btn" onclick="changeHP(-5)">Важке поранення -5</div>
+                    <div class="hp-btn" onclick="changeHP(1)">Лікування +1</div>
+                    <div class="hp-btn" onclick="changeHP(5)">Значне лікування +5</div>
+                    <div class="hp-btn" onclick="healFull()">Повне одужання</div>
+                </div>
+                
+                <!-- Система слави (замість XP) -->
+                <div class="fame-container">
+                    <div class="fame-info">
+                        <span>Слава Козацька: <span id="current-fame">0</span> / <span id="required-fame">50</span></span>
+                        <span id="fame-percentage">0%</span>
+                    </div>
+                    <div class="fame-bar" onclick="addFame(10)">
+                        <div class="fame-progress" id="fame-progress" style="width: 0%;">0%</div>
+                    </div>
+                    <div class="fame-add-buttons">
+                        <div class="fame-add-btn" onclick="addFame(5)">Мала перемога +5</div>
+                        <div class="fame-add-btn" onclick="addFame(10)">Перемога +10</div>
+                        <div class="fame-add-btn" onclick="addFame(25)">Велика перемога +25</div>
+                        <div class="fame-add-btn" onclick="addFame(50)">Легендарний подвиг +50</div>
+                    </div>
+                </div>
+                
+                <!-- Характеристики козака -->
+                <div class="stats-container">
+                    <div class="stat-box">
+                        <div class="stat-name">Міць</div>
+                        <div class="stat-value" id="strength-value">10</div>
+                        <div class="stat-modifier" id="strength-mod">+0</div>
+                        <button class="roll-btn" onclick="rollStat('strength')">Кинути 3к6</button>
+                    </div>
+                    
+                    <div class="stat-box">
+                        <div class="stat-name">Спритність</div>
+                        <div class="stat-value" id="dexterity-value">10</div>
+                        <div class="stat-modifier" id="dexterity-mod">+0</div>
+                        <button class="roll-btn" onclick="rollStat('dexterity')">Кинути 3к6</button>
+                    </div>
+                    
+                    <div class="stat-box">
+                        <div class="stat-name">Розум</div>
+                        <div class="stat-value" id="intelligence-value">10</div>
+                        <div class="stat-modifier" id="intelligence-mod">+0</div>
+                        <button class="roll-btn" onclick="rollStat('intelligence')">Кинути 3к6</button>
+                    </div>
+                    
+                    <div class="stat-box">
+                        <div class="stat-name">Мудрість</div>
+                        <div class="stat-value" id="wisdom-value">10</div>
+                        <div class="stat-modifier" id="wisdom-mod">+0</div>
+                        <button class="roll-btn" onclick="rollStat('wisdom')">Кинути 3к6</button>
+                    </div>
+                    
+                    <div class="stat-box">
+                        <div class="stat-name">Хоробрість</div>
+                        <div class="stat-value" id="charisma-value">10</div>
+                        <div class="stat-modifier" id="charisma-mod">+0</div>
+                        <button class="roll-btn" onclick="rollStat('charisma')">Кинути 3к6</button>
+                    </div>
+                    
+                    <div class="stat-box">
+                        <div class="stat-name">Витривалість</div>
+                        <div class="stat-value" id="constitution-value">10</div>
+                        <div class="stat-modifier" id="constitution-mod">+0</div>
+                        <button class="roll-btn" onclick="rollStat('constitution')">Кинути 3к6</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Спорядження та навички -->
+            <div class="sheet-section">
+                <div class="section-title">
+                    <span>Спорядження та Вміння</span>
+                    <i class="fas fa-horse"></i>
+                </div>
+                <div class="form-group">
+                    <label for="inventory">Зброя та Обладунки</label>
+                    <textarea id="inventory" placeholder="Опишіть зброю, обладунки та спорядження козака..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="skills">Військові Вміння</label>
+                    <textarea id="skills" placeholder="Опишість бойові та інші вміння козака..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="buffs">Особливі Якості та Привілеї</label>
+                    <textarea id="buffs" placeholder="Опишіть особливі якості, привілеї та зв'язки козака..."></textarea>
+                </div>
+                
+                <!-- Лог битв -->
+                <div class="battle-log">
+                    <div style="font-weight: bold; margin-bottom: 10px; text-align: center; color: var(--blood-red);">
+                        <i class="fas fa-swords"></i> Хроніка Бойових Дій
+                    </div>
+                    <div id="battle-log-content">
+                        <div class="battle-log-item">
+                            <span>Початковий стан</span>
+                            <span class="battle-heal">45 Життєвої Сили</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Кістки долі (генератор кубиків) -->
+        <div class="dice-roller">
+            <div class="section-title">
+                <span>Кістки Долі</span>
+                <i class="fas fa-dice"></i>
+            </div>
+            
+            <div class="dice-controls">
+                <div class="dice-select">
+                    <label for="dice-type">Тип кістки</label>
+                    <select id="dice-type">
+                        <option value="4">к4</option>
+                        <option value="6">к6</option>
+                        <option value="8">к8</option>
+                        <option value="10">к10</option>
+                        <option value="12">к12</option>
+                        <option value="20" selected>к20 (Кістка Долі)</option>
+                        <option value="100">к100</option>
+                    </select>
+                </div>
+                
+                <div class="dice-select">
+                    <label for="dice-count">Кількість</label>
+                    <select id="dice-count">
+                        <option value="1">1 кістка</option>
+                        <option value="2">2 кістки</option>
+                        <option value="3">3 кістки</option>
+                        <option value="4">4 кістки</option>
+                        <option value="5">5 кісток</option>
+                    </select>
+                </div>
+                
+                <div class="dice-select">
+                    <label for="modifier">Модифікатор</label>
+                    <input type="number" id="modifier" value="0" min="-10" max="50">
+                </div>
+                
+                <button class="roll-dice-btn" onclick="rollDice()">
+                    <i class="fas fa-dice-d20"></i> Кинути Кістки
+                </button>
+            </div>
+            
+            <!-- Швидкі кнопки кидків -->
+            <div class="quick-dice-buttons">
+                <div class="quick-dice-btn" onclick="quickRoll('к20', 1, 0)">к20</div>
+                <div class="quick-dice-btn" onclick="quickRoll('к20', 2, 0)">2к20</div>
+                <div class="quick-dice-btn" onclick="quickRoll('к6', 3, 0)">3к6</div>
+                <div class="quick-dice-btn" onclick="quickRoll('к8', 1, 0)">к8</div>
+                <div class="quick-dice-btn" onclick="quickRoll('к10', 1, 0)">к10</div>
+                <div class="quick-dice-btn" onclick="quickRoll('к100', 1, 0)">к100</div>
+            </div>
+            
+            <div class="dice-result" id="dice-result">
+                Кидайте кістки, щоб побачити волю долі
+            </div>
+            
+            <!-- Історія кидків -->
+            <div class="dice-history">
+                <div style="font-weight: bold; margin-bottom: 10px; text-align: center; color: var(--cossack-blue);">
+                    <i class="fas fa-history"></i> Літопис Кидків
+                </div>
+                <div id="dice-history-content">
+                    <!-- Тут будуть відображатися попередні кидки -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- Кнопки дій -->
+        <div class="action-buttons">
+            <button class="action-btn save-btn" onclick="saveCharacter()">
+                <i class="fas fa-save"></i> Внести до Реєстру
+            </button>
+            <button class="action-btn load-btn" onclick="openLoadModal()">
+                <i class="fas fa-folder-open"></i> Завантажити з Реєстру
+            </button>
+            <button class="action-btn share-btn" onclick="shareCharacter()">
+                <i class="fas fa-scroll"></i> Експорт для Коша
+            </button>
+            <button class="action-btn generate-btn" onclick="generateRandomCharacter()">
+                <i class="fas fa-random"></i> Згенерувати Товариша
+            </button>
+            <button class="action-btn reset-btn" onclick="resetCharacter()">
+                <i class="fas fa-skull-crossbones"></i> Стерти з Реєстру
+            </button>
+        </div>
+        
+        <!-- Модальне вікно для завантаження файлу -->
+        <div class="modal" id="load-modal">
+            <div class="modal-content">
+                <span class="close-modal" onclick="closeModal('load-modal')">&times;</span>
+                <h3 style="color: var(--cossack-blue); margin-bottom: 15px;">Завантажити з Козацького Реєстру</h3>
+                <p>Завантажте сувій (JSON файл) з даними вашого козака:</p>
+                <input type="file" id="file-input" accept=".json" style="margin: 15px 0;">
+                <button class="action-btn load-btn" style="width: 100%;" onclick="loadFromFile()">
+                    <i class="fas fa-upload"></i> Завантажити Сувій
+                </button>
+            </div>
+        </div>
+        
+        <!-- Модальне вікно для експорту -->
+        <div class="modal" id="share-modal">
+            <div class="modal-content">
+                <span class="close-modal" onclick="closeModal('share-modal')">&times;</span>
+                <h3 style="color: var(--cossack-blue); margin-bottom: 15px;">Експорт для Козацького Коша</h3>
+                <p>Збережіть сувій (JSON файл) з даними вашого козака для передачі отаману:</p>
+                <div style="background-color: var(--old-paper); padding: 15px; border-radius: 5px; margin: 15px 0; overflow-wrap: break-word; max-height: 200px; overflow-y: auto; border: 1px dashed var(--stain-brown); font-family: monospace;">
+                    <code id="json-output"></code>
+                </div>
+                <button class="action-btn share-btn" style="width: 100%;" onclick="downloadJson()">
+                    <i class="fas fa-download"></i> Зберегти Сувій
+                </button>
+                <p style="margin-top: 15px; font-size: 0.9rem; color: var(--ink-light); text-align: center; font-style: italic;">
+                    <i class="fas fa-info-circle"></i> Сувій містить усі дані козака для передачі отаману Коша
+                </p>
+            </div>
+        </div>
+        
+        <!-- Тостове повідомлення -->
+        <div class="toast" id="toast"></div>
+    </div>
+
+    <script>
+        // Глобальні змінні для збереження стану козака
+        let character = {
+            name: "",
+            class: "",
+            race: "",
+            background: "",
+            strength: 10,
+            dexterity: 10,
+            intelligence: 10,
+            wisdom: 10,
+            charisma: 10,
+            constitution: 10,
+            hp: 45,
+            maxHp: 45,
+            level: 1,
+            fame: 0, // Слава замість XP
+            inventory: "",
+            skills: "",
+            buffs: "",
+            battleLog: [],
+            diceHistory: [],
+            nameLocked: false
+        };
+        
+        // Рівні досвіду (новак, досвідчений, ветерани т.д.)
+        const experienceLevels = [
+            "Новак", "Досвідчений", "Бойовий Товариш", "Ветеран", 
+            "Знатний Воїн", "Легенда", "Безсмертний"
+        ];
+        
+        // Звання козацькі
+        const cossackRanks = ["Козак", "Отаман", "Сотник", "Полковник", "Гетьман", "Писар", "Осавул", "Хорунжий", "Знатний Військовий Товариш", "Джура", "Курінний"];
+        
+        // Походження
+        const origins = ["Українець", "Поляк", "Молдаванин", "Татарин", "Турок", "Вірменин", "Єврей", "Грек", "Серб", "Німець"];
+        
+        // Життєписи
+        const backgrounds = [
+            "Народився в козацькій сім'ї, з дитинства готувався до військової служби.",
+            "Втектий селянин, що знайшов свободу у Вольностях Війська Запорозького.",
+            "Шляхтич, що покинув свій стан заради козацької волі та слави.",
+            "Колишній солдат регулярної армії, що пристав до козаків.",
+            "Міщанин, що шукав пригод та багатства у козацьких походах.",
+            "Злочинець, що знайшов притулок у Січі та викупив свою провину кров'ю ворогів.",
+            "Син священика, що обрав шлях воїна замість духовного сану.",
+            "Іноземний авантюрист, що пристав до козаків заради слави та багатства.",
+            "Потомок стародавнього козацького роду, що продовжує традиції предків.",
+            "Ремісник, що покинув ремесло заради волі та лицарської слави."
+        ];
+        
+        // Ініціалізація сторінки
+        document.addEventListener('DOMContentLoaded', function() {
+            // Відновлення збереженого козака з локального сховища
+            const savedCharacter = localStorage.getItem('cossack-character');
+            if (savedCharacter) {
+                const parsed = JSON.parse(savedCharacter);
+                character = {...character, ...parsed};
+                updateFormFromCharacter();
+                
+                // Якщо ім'я вже було внесено до реєстру, блокуємо його
+                if (character.name && character.nameLocked) {
+                    lockNameField();
+                }
+            }
+            
+            // Додавання обробників подій для оновлення козака при зміні форми
+            document.getElementById('character-name').addEventListener('input', function() {
+                if (!character.nameLocked) {
+                    character.name = this.value;
+                    saveToLocalStorage();
+                }
+            });
+            
+            document.getElementById('character-class').addEventListener('change', function() {
+                character.class = this.value;
+                updateHPBasedOnRank();
+                saveToLocalStorage();
+            });
+            
+            document.getElementById('character-race').addEventListener('change', function() {
+                character.race = this.value;
+                saveToLocalStorage();
+            });
+            
+            document.getElementById('character-background').addEventListener('input', function() {
+                character.background = this.value;
+                saveToLocalStorage();
+            });
+            
+            document.getElementById('inventory').addEventListener('input', function() {
+                character.inventory = this.value;
+                saveToLocalStorage();
+            });
+            
+            document.getElementById('skills').addEventListener('input', function() {
+                character.skills = this.value;
+                saveToLocalStorage();
+            });
+            
+            document.getElementById('buffs').addEventListener('input', function() {
+                character.buffs = this.value;
+                saveToLocalStorage();
+            });
+            
+            // Ініціалізація логу битв
+            if (character.battleLog.length === 0) {
+                character.battleLog.push({
+                    action: "Початковий стан",
+                    amount: character.maxHp,
+                    timestamp: new Date().toLocaleTimeString(),
+                    currentHp: character.maxHp
+                });
+                updateBattleLog();
+            }
+            
+            // Ініціалізація історії кидків
+            if (character.diceHistory.length === 0) {
+                updateDiceHistory();
+            }
+        });
+        
+        // Блокування поля імені після внесення до реєстру
+        function lockNameField() {
+            const nameInput = document.getElementById('character-name');
+            nameInput.readOnly = true;
+            nameInput.classList.add('locked');
+            character.nameLocked = true;
+            
+            document.getElementById('name-lock').style.display = 'block';
+            document.getElementById('character-final-seal').style.display = 'flex';
+            
+            showToast("Ім'я козака внесено до реєстру та заблоковано для змін");
+        }
+        
+        // Оновлення форми на основі об'єкта козака
+        function updateFormFromCharacter() {
+            document.getElementById('character-name').value = character.name;
+            document.getElementById('character-class').value = character.class;
+            document.getElementById('character-race').value = character.race;
+            document.getElementById('character-background').value = character.background;
+            document.getElementById('strength-value').textContent = character.strength;
+            document.getElementById('dexterity-value').textContent = character.dexterity;
+            document.getElementById('intelligence-value').textContent = character.intelligence;
+            document.getElementById('wisdom-value').textContent = character.wisdom;
+            document.getElementById('charisma-value').textContent = character.charisma;
+            document.getElementById('constitution-value').textContent = character.constitution;
+            document.getElementById('inventory').value = character.inventory;
+            document.getElementById('skills').value = character.skills;
+            document.getElementById('buffs').value = character.buffs;
+            
+            // Оновлення модифікаторів характеристик
+            updateModifiers();
+            
+            // Оновлення HP та рівня
+            document.getElementById('hp-value').textContent = character.hp;
+            document.getElementById('max-hp-value').textContent = character.maxHp;
+            document.getElementById('level-badge').textContent = `Досвід: ${experienceLevels[character.level - 1] || experienceLevels[0]}`;
+            
+            // Оновлення слави
+            updateFameDisplay();
+            
+            // Оновлення логів
+            updateBattleLog();
+            updateDiceHistory();
+            
+            // Блокування імені, якщо воно вже було внесено до реєстру
+            if (character.name && character.nameLocked) {
+                lockNameField();
+            }
+        }
+        
+        // Оновлення модифікаторів характеристик
+        function updateModifiers() {
+            // Формула модифікатора: (значення - 10) / 2, округлене вниз
+            const stats = ['strength', 'dexterity', 'intelligence', 'wisdom', 'charisma', 'constitution'];
+            
+            stats.forEach(stat => {
+                const value = character[stat];
+                const mod = Math.floor((value - 10) / 2);
+                document.getElementById(`${stat}-mod`).textContent = formatModifier(mod);
+            });
+        }
+        
+        // Форматування модифікатора зі знаком
+        function formatModifier(mod) {
+            return mod >= 0 ? `+${mod}` : `${mod}`;
+        }
+        
+        // Кидання кістки для характеристики
+        function rollStat(stat) {
+            const diceCount = 3;
+            const diceType = 6;
+            let total = 0;
+            let rolls = [];
+            
+            // Кидання кісток
+            for (let i = 0; i < diceCount; i++) {
+                const roll = Math.floor(Math.random() * diceType) + 1;
+                rolls.push(roll);
+                total += roll;
+            }
+            
+            // Оновлення значення характеристики
+            character[stat] = total;
+            document.getElementById(`${stat}-value`).textContent = total;
+            
+            // Оновлення модифікаторів
+            updateModifiers();
+            
+            // Оновлення HP, якщо змінилася витривалість
+            if (stat === 'constitution') {
+                updateHPBasedOnConstitution();
+            }
+            
+            // Додавання до історії кидків
+            addToDiceHistory(`3к6 для ${getStatName(stat)}: ${rolls.join(' + ')} = ${total}`);
+            
+            // Показ результату
+            showToast(`Кинуто ${diceCount}к${diceType} для ${getStatName(stat)}: ${rolls.join(' + ')} = ${total}`);
+            
+            // Збереження змін
+            saveToLocalStorage();
+        }
+        
+        // Отримання назви характеристики українською
+        function getStatName(stat) {
+            const statNames = {
+                'strength': 'Міць',
+                'dexterity': 'Спритність',
+                'intelligence': 'Розум',
+                'wisdom': 'Мудрість',
+                'charisma': 'Хоробрість',
+                'constitution': 'Витривалість'
+            };
+            return statNames[stat] || stat;
+        }
+        
+        // Оновлення HP на основі звання
+        function updateHPBasedOnRank() {
+            // Базове HP залежно від звання
+            const rankHpMap = {
+                'Гетьман': { min: 60, max: 80 },
+                'Полковник': { min: 50, max: 70 },
+                'Сотник': { min: 45, max: 65 },
+                'Отаман': { min: 40, max: 60 },
+                'Осавул': { min: 40, max: 55 },
+                'Хорунжий': { min: 35, max: 50 },
+                'Знатний Військовий Товариш': { min: 35, max: 50 },
+                'Курінний': { min: 35, max: 50 },
+                'Козак': { min: 30, max: 45 },
+                'Писар': { min: 25, max: 40 },
+                'Джура': { min: 20, max: 35 }
+            };
+            
+            const rankHp = rankHpMap[character.class] || { min: 30, max: 45 };
+            
+            if (character.level === 1) {
+                // Рандомне HP в межах для звання
+                const range = rankHp.max - rankHp.min;
+                character.maxHp = Math.floor(Math.random() * (range + 1)) + rankHp.min;
+                character.hp = character.maxHp;
+                
+                document.getElementById('hp-value').textContent = character.hp;
+                document.getElementById('max-hp-value').textContent = character.maxHp;
+                
+                // Оновлення логу
+                character.battleLog = [{
+                    action: "Початковий стан",
+                    amount: character.maxHp,
+                    timestamp: new Date().toLocaleTimeString(),
+                    currentHp: character.maxHp
+                }];
+                updateBattleLog();
+            }
+        }
+        
+        // Оновлення HP на основі витривалості
+        function updateHPBasedOnConstitution() {
+            if (character.level === 1) return;
+            
+            // Перерахунок HP для вищих рівнів з урахуванням нової витривалості
+            const oldConMod = Math.floor((10 - 10) / 2);
+            const newConMod = Math.floor((character.constitution - 10) / 2);
+            const conDiff = newConMod - oldConMod;
+            
+            // Додаємо різницю для кожного рівня починаючи з другого
+            character.maxHp += conDiff * (character.level - 1);
+            character.hp = Math.min(character.hp, character.maxHp);
+            
+            document.getElementById('hp-value').textContent = character.hp;
+            document.getElementById('max-hp-value').textContent = character.maxHp;
+            
+            // Додавання запису в лог
+            addToBattleLog(`Зміна витривалості`, conDiff * (character.level - 1));
+        }
+        
+        // Зміна HP (поранення/лікування)
+        function changeHP(amount) {
+            const oldHp = character.hp;
+            character.hp += amount;
+            
+            // Обмеження HP в межах 0 - maxHp
+            character.hp = Math.max(0, Math.min(character.hp, character.maxHp));
+            
+            document.getElementById('hp-value').textContent = character.hp;
+            
+            // Додавання запису в лог
+            const action = amount < 0 ? "Поранення" : "Лікування";
+            addToBattleLog(`${action}`, amount, oldHp);
+            
+            // Перевірка на смерть
+            if (character.hp <= 0) {
+                showToast("⚰️ Козак пав у бою! Потребує негайної допомоги!", true);
+            }
+            
+            saveToLocalStorage();
+        }
+        
+        // Повне лікування
+        function healFull() {
+            const oldHp = character.hp;
+            const amount = character.maxHp - character.hp;
+            
+            if (amount > 0) {
+                character.hp = character.maxHp;
+                document.getElementById('hp-value').textContent = character.hp;
+                
+                addToBattleLog("Повне одужання", amount, oldHp);
+                showToast("Козак повністю одужав та готовий до бою!");
+                
+                saveToLocalStorage();
+            }
+        }
+        
+        // Додавання запису в лог битв
+        function addToBattleLog(action, amount, oldHp = character.hp) {
+            character.battleLog.push({
+                action: action,
+                amount: amount,
+                timestamp: new Date().toLocaleTimeString(),
+                currentHp: character.hp
+            });
+            
+            // Обмежуємо лог останніми 10 записами
+            if (character.battleLog.length > 10) {
+                character.battleLog = character.battleLog.slice(-10);
+            }
+            
+            updateBattleLog();
+        }
+        
+        // Оновлення відображення логу битв
+        function updateBattleLog() {
+            const logContent = document.getElementById('battle-log-content');
+            logContent.innerHTML = '';
+            
+            character.battleLog.forEach(entry => {
+                const item = document.createElement('div');
+                item.className = 'battle-log-item';
+                
+                const amountClass = entry.amount > 0 ? 'battle-heal' : 'battle-damage';
+                const amountText = entry.amount > 0 ? `+${entry.amount}` : entry.amount;
+                
+                item.innerHTML = `
+                    <div>
+                        <div>${entry.action}</div>
+                        <div style="font-size: 0.8rem; color: var(--ink-light);">${entry.timestamp}</div>
+                    </div>
+                    <div class="${amountClass}">${amountText} ЖС</div>
+                `;
+                
+                logContent.appendChild(item);
+            });
+            
+            // Прокручуємо до останнього запису
+            logContent.scrollTop = logContent.scrollHeight;
+        }
+        
+        // Оновлення відображення слави
+        function updateFameDisplay() {
+            const requiredFame = getRequiredFame(character.level);
+            const percentage = Math.min(100, Math.floor((character.fame / requiredFame) * 100));
+            
+            document.getElementById('current-fame').textContent = character.fame;
+            document.getElementById('required-fame').textContent = requiredFame;
+            document.getElementById('fame-percentage').textContent = `${percentage}%`;
+            document.getElementById('fame-progress').textContent = `${percentage}%`;
+            document.getElementById('fame-progress').style.width = `${percentage}%`;
+            
+            // Оновлення позначки досвіду
+            document.getElementById('level-badge').textContent = `Досвід: ${experienceLevels[character.level - 1] || experienceLevels[0]}`;
+        }
+        
+        // Отримання необхідної слави для наступного рівня
+        function getRequiredFame(level) {
+            // Для 2 рівня потрібно 50 слави, для кожного наступного +100
+            return 50 + (level - 1) * 100;
+        }
+        
+        // Додавання слави
+        function addFame(amount) {
+            if (amount <= 0) return;
+            
+            character.fame += amount;
+            const requiredFame = getRequiredFame(character.level);
+            
+            // Перевірка на отримання нового рівня
+            let levelsGained = 0;
+            while (character.fame >= requiredFame) {
+                character.level++;
+                character.fame -= requiredFame;
+                levelsGained++;
+                
+                // Оновлення HP при отриманні нового рівня
+                levelUpHPGain();
+            }
+            
+            // Оновлення відображення
+            updateFameDisplay();
+            
+            // Повідомлення про отримання рівня
+            if (levelsGained > 0) {
+                const newLevelName = experienceLevels[character.level - 1] || experienceLevels[0];
+                showToast(`Слава козацька! Ваш товариш отримав ${levelsGained} рівень(ів)! Тепер він ${newLevelName}.`);
+            } else {
+                showToast(`Додано ${amount} слави. Залишилось ${requiredFame - character.fame} до нового рівня.`);
+            }
+            
+            // Збереження змін
+            saveToLocalStorage();
+        }
+        
+        // Збільшення HP при отриманні рівня
+        function levelUpHPGain() {
+            // HP приріст за рівень залежить від звання
+            const rankHpGain = {
+                'Гетьман': { min: 10, max: 15 },
+                'Полковник': { min: 8, max: 12 },
+                'Сотник': { min: 7, max: 11 },
+                'Отаман': { min: 6, max: 10 },
+                'Осавул': { min: 6, max: 10 },
+                'Хорунжий': { min: 5, max: 9 },
+                'Знатний Військовий Товариш': { min: 5, max: 9 },
+                'Курінний': { min: 5, max: 9 },
+                'Козак': { min: 4, max: 8 },
+                'Писар': { min: 3, max: 6 },
+                'Джура': { min: 3, max: 6 }
+            };
+            
+            const hpGainRange = rankHpGain[character.class] || { min: 4, max: 8 };
+            const range = hpGainRange.max - hpGainRange.min;
+            const hpGain = Math.floor(Math.random() * (range + 1)) + hpGainRange.min;
+            
+            // Додаємо модифікатор витривалості
+            const conMod = Math.floor((character.constitution - 10) / 2);
+            const totalGain = Math.max(1, hpGain + conMod);
+            
+            character.maxHp += totalGain;
+            character.hp += totalGain;
+            
+            document.getElementById('hp-value').textContent = character.hp;
+            document.getElementById('max-hp-value').textContent = character.maxHp;
+            
+            // Додавання запису в лог
+            addToBattleLog(`Новий рівень досвіду`, totalGain);
+        }
+        
+        // Кидання кісток
+        function rollDice() {
+            const diceType = parseInt(document.getElementById('dice-type').value);
+            const diceCount = parseInt(document.getElementById('dice-count').value);
+            const modifier = parseInt(document.getElementById('modifier').value);
+            
+            performDiceRoll(diceType, diceCount, modifier);
+        }
+        
+        // Швидке кидання кісток
+        function quickRoll(diceType, diceCount, modifier) {
+            // Конвертуємо 'к20' в 20 тощо
+            const type = parseInt(diceType.replace('к', ''));
+            performDiceRoll(type, diceCount, modifier);
+        }
+        
+        // Виконання кидка кісток
+        function performDiceRoll(diceType, diceCount, modifier) {
+            // Анімація кидання
+            const diceResult = document.getElementById('dice-result');
+            diceResult.innerHTML = '<div class="dice-animation"><i class="fas fa-dice-d20"></i></div>';
+            
+            // Очищення анімації через 1 секунду
+            setTimeout(() => {
+                let total = 0;
+                let rolls = [];
+                let naturalTotal = 0;
+                
+                // Кидання кісток
+                for (let i = 0; i < diceCount; i++) {
+                    const roll = Math.floor(Math.random() * diceType) + 1;
+                    rolls.push(roll);
+                    naturalTotal += roll;
+                }
+                
+                // Додавання модифікатора
+                total = naturalTotal + modifier;
+                
+                // Форматування результату
+                let resultText = `Кинуто ${diceCount}к${diceType}`;
+                if (modifier !== 0) {
+                    resultText += ` ${modifier >= 0 ? '+' : ''}${modifier}`;
+                }
+                resultText += `: ${rolls.join(' + ')}`;
+                
+                if (modifier !== 0) {
+                    resultText += ` ${modifier >= 0 ? '+' : ''}${modifier} = ${total}`;
+                } else {
+                    resultText += ` = ${total}`;
+                }
+                
+                // Спеціальні повідомлення для к20
+                if (diceType === 20 && diceCount === 1) {
+                    if (rolls[0] === 20) {
+                        resultText += " ⚡ КРИТИЧНИЙ УСПІХ! Воля Божа!";
+                    } else if (rolls[0] === 1) {
+                        resultText += " 💀 КРИТИЧНИЙ ПРОВАЛ! Лиха доля...";
+                    }
+                }
+                
+                diceResult.innerHTML = resultText;
+                
+                // Додавання до історії кидків
+                addToDiceHistory(resultText);
+                
+                showToast(resultText);
+            }, 1000);
+        }
+        
+        // Додавання до історії кидків
+        function addToDiceHistory(rollText) {
+            character.diceHistory.push({
+                text: rollText,
+                timestamp: new Date().toLocaleTimeString()
+            });
+            
+            // Обмежуємо історію останніми 10 кидками
+            if (character.diceHistory.length > 10) {
+                character.diceHistory = character.diceHistory.slice(-10);
+            }
+            
+            updateDiceHistory();
+        }
+        
+        // Оновлення відображення історії кидків
+        function updateDiceHistory() {
+            const historyContent = document.getElementById('dice-history-content');
+            historyContent.innerHTML = '';
+            
+            character.diceHistory.forEach(entry => {
+                const item = document.createElement('div');
+                item.className = 'dice-history-item';
+                item.innerHTML = `
+                    <div>${entry.text}</div>
+                    <div style="font-size: 0.8rem; color: var(--ink-light);">${entry.timestamp}</div>
+                `;
+                historyContent.appendChild(item);
+            });
+            
+            // Прокручуємо до останнього запису
+            historyContent.scrollTop = historyContent.scrollHeight;
+        }
+        
+        // Генерація випадкового козака
+        function generateRandomCharacter() {
+            // Випадкове ім'я та прізвище
+            const firstNames = ["Іван", "Петро", "Олексій", "Григорій", "Тарас", "Семен", "Яків", "Василь", "Михайло", "Дмитро", "Андрій", "Юрій", "Павло", "Макар", "Федір"];
+            const lastNames = ["Шевченко", "Франко", "Хмельницький", "Сагайдачний", "Дорошенко", "Мазепа", "Вишневецький", "Байда", "Наливайко", "Сірко", "Гончаренко", "Коваленко", "Бондаренко", "Ткаченко", "Мельниченко"];
+            
+            character.name = `${firstNames[Math.floor(Math.random() * firstNames.length)]} ${lastNames[Math.floor(Math.random() * lastNames.length)]}`;
+            
+            // Випадкове звання
+            character.class = cossackRanks[Math.floor(Math.random() * cossackRanks.length)];
+            
+            // Випадкове походження
+            character.race = origins[Math.floor(Math.random() * origins.length)];
+            
+            // Випадковий життєпис
+            character.background = backgrounds[Math.floor(Math.random() * backgrounds.length)];
+            
+            // Випадкові характеристики (кидання 4к6, відкидаємо найнижчий)
+            character.strength = roll4k6DropLowest();
+            character.dexterity = roll4k6DropLowest();
+            character.intelligence = roll4k6DropLowest();
+            character.wisdom = roll4k6DropLowest();
+            character.charisma = roll4k6DropLowest();
+            character.constitution = roll4k6DropLowest();
+            
+            // Початковий рівень та HP
+            character.level = 1;
+            character.fame = 0;
+            updateHPBasedOnRank();
+            
+            // Випадкове спорядження
+            const inventoryItems = [
+                "Сабля, пістоль, кинджал, кольчуга, шолом, 50 золотих червінців",
+                "Спис, лука з стрілами, шабля, шкіряна куртка, трофейний турецький кинжал, 30 червінців",
+                "Бердиш, пістолі (пара), кольчуга, ріг з порохом, кремень, 100 золотих",
+                "Шабля, булава, щит, кольчуга, трофейний турецький шолом, 75 червінців",
+                "Сокира-бартка, пістоль, кинджал, шкіряна куртка, набір для лікування, 40 золотих",
+                "Сабля, лук, 20 стріл, легка кольчуга, торба з провізією, 60 червінців"
+            ];
+            character.inventory = inventoryItems[Math.floor(Math.random() * inventoryItems.length)];
+            
+            // Випадкові вміння
+            const skills = [
+                "Верхова їзда, Фехтування, Стрільба з лука, Виживання в степу",
+                "Керування човном, Плавання, Метелення ворожої розвідки, Тактика малих загонів",
+                "Переговори, Знаходження шляху, Лікування ран, Знання турецької мови",
+                "Управління гарматою, Облогові справи, Будівництво укріплень, Картографія",
+                "Полювання, Торгівля, Ремонт зброї, Знання татарської мови",
+                "Розвідка, Маскування, Нічні вилазки, Знання польської мови"
+            ];
+            character.skills = skills[Math.floor(Math.random() * skills.length)];
+            
+            // Випадкові якості та привілеї
+            const buffs = [
+                "Знайомство з гетьманом: Можливість отримати допомогу від вищого командування\nВідзнака за хоробрість: +2 до авторитету серед козаків\nЗнання турецьких звичаїв: Легше вести переговори з османами",
+                "Багатий трофей: Має коштовну турецьку зброю, яку може продати\nДосвід морських походів: +3 до навігації на морі\nЗв'язки в Османській імперії: Може отримати інформацію з Стамбула",
+                "Майстер фехтування: +2 до атак шаблею\nНезламний дух: Опір страху та залякуванню\nЗнання лікарських трав: Може лікувати поранення в польових умовах",
+                "Мови: Володіє польською, татарською та турецькою\nДипломат: Може вести переговори з іноземцями\nЗнайомство з кордоном: Непогано орієнтується на прикордонних землях"
+            ];
+            character.buffs = buffs[Math.floor(Math.random() * buffs.length)];
+            
+            // Ім'я не блокуємо при генерації
+            character.nameLocked = false;
+            
+            // Оновлення форми
+            updateFormFromCharacter();
+            
+            // Показ повідомлення
+            showToast(`Створено козака: ${character.name}, ${character.race} ${character.class}`);
+            
+            // Збереження змін
+            saveToLocalStorage();
+        }
+        
+        // Функція для кидання 4к6 з відкиданням найнижчого
+        function roll4k6DropLowest() {
+            let rolls = [];
+            for (let i = 0; i < 4; i++) {
+                rolls.push(Math.floor(Math.random() * 6) + 1);
+            }
+            
+            // Сортуємо та відкидаємо найнижчий
+            rolls.sort((a, b) => a - b);
+            rolls.shift();
+            
+            // Сумуємо залишені 3
+            return rolls.reduce((a, b) => a + b, 0);
+        }
+        
+        // Збереження козака в реєстр (локальне сховище)
+        function saveCharacter() {
+            if (!character.name.trim()) {
+                showToast("Будь ласка, введіть ім'я козака перед внесенням до реєстру", true);
+                return;
+            }
+            
+            saveToLocalStorage();
+            
+            // Блокуємо ім'я після внесення до реєстру
+            if (!character.nameLocked) {
+                lockNameField();
+            }
+            
+            showToast("Козак внесений до Козацького Реєстру");
+        }
+        
+        // Завантаження козака з реєстру
+        function loadCharacter() {
+            const savedCharacter = localStorage.getItem('cossack-character');
+            if (savedCharacter) {
+                const parsed = JSON.parse(savedCharacter);
+                character = {...character, ...parsed};
+                updateFormFromCharacter();
+                showToast("Козак завантажений з Реєстру");
+            } else {
+                showToast("У реєстрі немає збережених козаків", true);
+            }
+        }
+        
+        // Відкриття модального вікна для експорту
+        function shareCharacter() {
+            // Оновлення даних козака з форми
+            updateCharacterFromForm();
+            
+            // Генерація JSON
+            const characterJson = JSON.stringify(character, null, 2);
+            document.getElementById('json-output').textContent = characterJson;
+            
+            // Показ модального вікна
+            document.getElementById('share-modal').style.display = 'flex';
+        }
+        
+        // Завантаження JSON файлу для передачі отаману
+        function downloadJson() {
+            updateCharacterFromForm();
+            
+            // Створюємо чистий об'єкт для експорту
+            const exportCharacter = {
+                name: character.name,
+                class: character.class,
+                race: character.race,
+                background: character.background,
+                strength: character.strength,
+                dexterity: character.dexterity,
+                intelligence: character.intelligence,
+                wisdom: character.wisdom,
+                charisma: character.charisma,
+                constitution: character.constitution,
+                hp: character.hp,
+                maxHp: character.maxHp,
+                level: character.level,
+                fame: character.fame,
+                inventory: character.inventory,
+                skills: character.skills,
+                buffs: character.buffs
+            };
+            
+            const dataStr = JSON.stringify(exportCharacter, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+            
+            const exportFileDefaultName = `козак-${character.name || 'невідомий'}.json`;
+            
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+            
+            showToast("Сувій збережено. Передайте його отаману Коша.");
+        }
+        
+        // Відкриття модального вікна для завантаження файлу
+        function openLoadModal() {
+            document.getElementById('load-modal').style.display = 'flex';
+        }
+        
+        // Закриття модального вікна
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+        
+        // Завантаження козака з файлу
+        function loadFromFile() {
+            const fileInput = document.getElementById('file-input');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                showToast("Будь ласка, виберіть сувій (файл)", true);
+                return;
+            }
+            
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                try {
+                    const loadedCharacter = JSON.parse(e.target.result);
+                    
+                    // Оновлюємо тільки основні поля
+                    const mainFields = ['name', 'class', 'race', 'background', 'strength', 'dexterity', 'intelligence', 'wisdom', 'charisma', 'constitution', 'hp', 'maxHp', 'level', 'fame', 'inventory', 'skills', 'buffs'];
+                    
+                    mainFields.forEach(field => {
+                        if (loadedCharacter[field] !== undefined) {
+                            character[field] = loadedCharacter[field];
+                        }
+                    });
+                    
+                    // Не блокуємо ім'я при завантаженні з файлу
+                    character.nameLocked = false;
+                    
+                    updateFormFromCharacter();
+                    showToast("Козак завантажений з сувою");
+                    closeModal('load-modal');
+                    
+                    // Очищуємо поле файлу
+                    fileInput.value = '';
+                } catch (error) {
+                    showToast("Помилка при читанні сувою: некоректний формат", true);
+                }
+            };
+            
+            reader.readAsText(file);
+        }
+        
+        // Скидання козака
+        function resetCharacter() {
+            if (confirm("Ви впевнені, що хочете стерти козака з реєстру? Усі дані будуть втрачені.")) {
+                character = {
+                    name: "",
+                    class: "",
+                    race: "",
+                    background: "",
+                    strength: 10,
+                    dexterity: 10,
+                    intelligence: 10,
+                    wisdom: 10,
+                    charisma: 10,
+                    constitution: 10,
+                    hp: 45,
+                    maxHp: 45,
+                    level: 1,
+                    fame: 0,
+                    inventory: "",
+                    skills: "",
+                    buffs: "",
+                    battleLog: [],
+                    diceHistory: [],
+                    nameLocked: false
+                };
+                
+                // Додаємо початковий запис в лог
+                character.battleLog.push({
+                    action: "Початковий стан",
+                    amount: character.maxHp,
+                    timestamp: new Date().toLocaleTimeString(),
+                    currentHp: character.maxHp
+                });
+                
+                updateFormFromCharacter();
+                
+                // Розблоковуємо поле імені
+                const nameInput = document.getElementById('character-name');
+                nameInput.readOnly = false;
+                nameInput.classList.remove('locked');
+                document.getElementById('name-lock').style.display = 'none';
+                document.getElementById('character-final-seal').style.display = 'none';
+                
+                showToast("Козак стертий з реєстру");
+                saveToLocalStorage();
+            }
+        }
+        
+        // Оновлення об'єкта козака з форми
+        function updateCharacterFromForm() {
+            if (!character.nameLocked) {
+                character.name = document.getElementById('character-name').value;
+            }
+            character.class = document.getElementById('character-class').value;
+            character.race = document.getElementById('character-race').value;
+            character.background = document.getElementById('character-background').value;
+            character.inventory = document.getElementById('inventory').value;
+            character.skills = document.getElementById('skills').value;
+            character.buffs = document.getElementById('buffs').value;
+        }
+        
+        // Збереження в локальне сховище
+        function saveToLocalStorage() {
+            updateCharacterFromForm();
+            localStorage.setItem('cossack-character', JSON.stringify(character));
+        }
+        
+        // Показ тостового повідомлення
+        function showToast(message, isError = false) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.style.background = isError ? 
+                'linear-gradient(to right, #c41e3a, #8b0000)' : 
+                'linear-gradient(to right, var(--cossack-blue), #003d82)';
+            toast.style.borderColor = isError ? '#8b0000' : 'var(--cossack-yellow)';
+            toast.style.display = 'block';
+            
+            // Автоматичне приховування через 3 секунди
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3000);
+        }
+        
+        // Додавання обробників подій для закриття модальних вікон при кліку поза ними
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+            }
+        };
+    </script>
+</body>
+</html>
